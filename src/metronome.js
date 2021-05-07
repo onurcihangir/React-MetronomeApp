@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import "./metronome.css";
 import click1 from "./click1.mp3";
 import click2 from "./click2.mp3";
+import Stopwatch from "./stopwatch";
 
 class Metronome extends Component {
 
@@ -17,13 +18,14 @@ class Metronome extends Component {
 
         this.click1 = new Audio(click1);
         this.click2 = new Audio(click2);
+        this.stopwatch = React.createRef();
     }
 
     playClick = () => {
         const count = this.state.count;
         const beatsPerMeasure = this.state.beatsPerMeasure;
 
-        if (count % beatsPerMeasure == 0) {
+        if (count % beatsPerMeasure === 0) {
             this.click1.play();
         }
         else {
@@ -92,13 +94,18 @@ class Metronome extends Component {
 
     startStop = () => {
         if (this.state.playing) {
+            //Stop the metronome
             clearInterval(this.timer);
+            this.stopwatch.current.stopTimer();
             this.setState({
                 playing:false
             });
         }
         else {
+            //Start the metronome
             this.timer = setInterval(this.playClick, (60000/this.state.bpm));
+            this.stopwatch.current.resetTimer();
+            this.stopwatch.current.startTimer();
             this.setState({
                 count: 0,
                 playing: true
@@ -124,9 +131,10 @@ class Metronome extends Component {
                     <button onClick={this.startStop}>{this.state.playing ? "Stop" : "Start"}</button>
                     <div className="measure-settings">
                         <button onClick={this.decreaseMeasureByOne} className="decrease-measure">-</button>
-                        <h1>{this.state.beatsPerMeasure}</h1>
+                        <span className="measure-display">{this.state.beatsPerMeasure}</span>
                         <button onClick={this.increaseMeasureByOne} className="increase-measure">+</button>
                     </div>
+                    <Stopwatch ref={this.stopwatch}/>
                 </div>
             </div>
         )
