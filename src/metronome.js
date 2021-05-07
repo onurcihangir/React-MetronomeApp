@@ -24,11 +24,9 @@ class Metronome extends Component {
         const beatsPerMeasure = this.state.beatsPerMeasure;
 
         if (count % beatsPerMeasure == 0) {
-            console.log(this.state.count);
             this.click1.play();
         }
         else {
-            console.log(this.state.count);
             this.click2.play();
         }
 
