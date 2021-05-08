@@ -104,7 +104,6 @@ class Metronome extends Component {
         else {
             //Start the metronome
             this.timer = setInterval(this.playClick, (60000/this.state.bpm));
-            this.stopwatch.current.resetTimer();
             this.stopwatch.current.startTimer();
             this.setState({
                 count: 0,
@@ -113,6 +112,15 @@ class Metronome extends Component {
                 this.playClick
             );
         }
+    }
+
+    resetStopwatch = () => {
+        this.stopwatch.current.resetTimer();
+        this.stopwatch.current.stopTimer();
+        clearInterval(this.timer);
+        this.setState({
+            playing:false
+        });
     }
     
     render() {
@@ -125,10 +133,11 @@ class Metronome extends Component {
                     </div>
                     <div className="tempo-settings">
                         <button onClick={this.decreaseBpmByOne} className="decrease-tempo">-</button>
-                        <input type="range" min="60" max="240" value={this.state.bpm} onChange={this.slideChangingBpm} />
+                        <input type="range" min="60" max="240" value={this.state.bpm} onChange={this.slideChangingBpm} className="slider"/>
                         <button onClick={this.increaseBpmByOne} className="increase-tempo">+</button>
                     </div>
                     <button onClick={this.startStop}>{this.state.playing ? "Stop" : "Start"}</button>
+                    <button onClick={this.resetStopwatch}>Reset</button>
                     <div className="measure-settings">
                         <button onClick={this.decreaseMeasureByOne} className="decrease-measure">-</button>
                         <span className="measure-display">{this.state.beatsPerMeasure}</span>
